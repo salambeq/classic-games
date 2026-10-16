@@ -3,7 +3,8 @@
 ## 📌 Архитектурный срез проекта
 - **Название**: Retro Cell Arcade (Ретро-игры кнопочных телефонов)
 - **Тип**: Telegram Bot + Telegram Mini App (TMA)
-- **Стек**: React 18, TypeScript, Vite 6, Tailwind CSS, HTML5 Canvas, Web Audio API Chiptune Synth, grammY (Telegram Bot API)
+- **Стек**: React 18, TypeScript, Vite 6, Tailwind CSS, HTML5 Canvas, Web Audio API Chiptune Synth, TGCloud / grammY
+- **Облако и серверлесс**: Telegram Cloud (`@tgcloud/bot`, `https://app8636499227.tgcloud.ai/`)
 - **Безопасность**: TMA Security (Web Crypto API HMAC-SHA256 валидация `initData` с защитой от replay-атак $\le$ 24 ч)
 - **Стандарты**: Universal Responsive & Themes (Dark/Light + Mobile/Desktop), Haptic Feedback, Chiptune Synthesizer.
 
@@ -44,7 +45,7 @@
   - `src/audio/RetroAudio.ts` (8-битный Chiptune синтезатор Web Audio API + рингтон Nokia Tune)
   - `src/tma/telegram-sdk.ts` (Haptics, BackButton, User, ShareScore)
   - `src/tma/telegram-auth.ts` (TMA Security валидация на Web Crypto API)
-  - `src/utils/storage.ts` (безопасный адаптер безопасного хранения)
+  - `src/utils/storage.ts` (безопасный адаптер хранения)
   - `src/components/ui/RetroMenu.tsx` (каталог игр, выбор скинов, подсветка, звук)
   - `src/components/ui/LeaderboardModal.tsx` (таблица рекордов)
   - `bot/bot.ts` (Telegram-бот на grammY с кнопками запуска Mini App и deep links)
@@ -55,4 +56,24 @@
   2. Разработана система процедурного звука на Web Audio API и тактильной отдачи Telegram Haptics.
   3. Проведены автоматизированные тесты `tests/verify-all.ts` (100% pass).
   4. Проверен билд `npm run build` (0 ошибок, 983ms).
-- **Статус**: Выполнено на 100%. Готово к деплою.
+- **Статус**: Выполнено.
+
+### Сессия 3: Интеграция с Telegram Serverless Cloud (nostalgia0bot)
+- **Дата и время (МСК)**: 16 октября 2026, 10:11
+- **Тема**: Создание и деплой бота nostalgia0bot в TGCloud с привязкой TMA
+- **Затронутые файлы**:
+  - `/Users/Salambek/.gemini/antigravity/vault/secrets.env` (добавлены токены бота и TGCloud)
+  - `/Users/Salambek/.gemini/antigravity/vault/secrets.json` (сохранены ключи nostalgia0bot)
+  - `nostalgia0bot/tgcloud.jsonc` (настройка раздачи статики Mini App и SPA)
+  - `nostalgia0bot/tgcloud/handlers/message.js` (обработчик сообщений с кнопками запуска игр в TMA)
+  - `nostalgia0bot/tgcloud/schema.js` (схема таблицы leaderboards в SQLite)
+  - `nostalgia0bot/tgcloud/endpoints/saveScore.js` (эндпоинт сохранения рекордов)
+  - `nostalgia0bot/tgcloud/endpoints/getLeaderboard.js` (эндпоинт получения рекордов)
+  - `.env` (обновлен боевой URL `https://app8636499227.tgcloud.ai`)
+- **Что сделано**:
+  1. Выполнена команда `npm create @tgcloud/bot nostalgia0bot` с привязкой к боту `app8636499227`.
+  2. Статический билд Mini App загружен в TGCloud Hosting (`https://app8636499227.tgcloud.ai/`).
+  3. Развернуты серверлесс-хэндлеры и эндпоинты в облаке Telegram (`npx tgcloud push`).
+  4. Применена миграция базы данных `leaderboards` (`npx tgcloud migrate`).
+  5. Проверен активный вебхук бота `https://cloud.telegram.org/app8636499227/webhook`.
+- **Статус**: Выполнено на 100%. Бот в облаке активен.
